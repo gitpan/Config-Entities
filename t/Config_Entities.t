@@ -90,7 +90,10 @@ is_deeply(
             g => {
                 h => 'abc',
                 i => 'ghi',
-                j => { k => { l => { m => 'jkl' } } }
+                j => {
+                    i => 'ghi',
+                    k => { l => { m => 'jkl' } }
+                }
             }
         }
     },
@@ -104,7 +107,13 @@ $entities = Config::Entities->new(
         properties      => { username => 'override_user' }
     }
 );
-is_deeply( $entities->get_entity('d.g.j'), { k => { l => { m => 'jkl' } } }, 'get_entity' );
+is_deeply(
+    $entities->get_entity('d.g.j'),
+    {   i => 'ghi',
+        k => { l => { m => 'jkl' } }
+    },
+    'get_entity'
+);
 
 $entities = Config::Entities->new(
     "$test_dir/entities",

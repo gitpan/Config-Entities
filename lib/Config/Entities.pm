@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package Config::Entities;
-$Config::Entities::VERSION = '0.02';
+$Config::Entities::VERSION = '0.03';
 # ABSTRACT: An multi-level overridable perl based configuration module
 # PODNAME: Config::Entities
 
@@ -108,7 +108,26 @@ sub _init {
         );
     }
 
+    _inherit( undef, $self );
+
     return $self;
+}
+
+sub _inherit {
+    my ( $parent, $child ) = @_;
+    if ( $child && ( ref($child) eq 'HASH' || ref($child) eq 'Config::Entities' ) ) {
+        if ( $parent && $child->{'Config::Entities::inherit'} ) {
+            my $inherit = delete( $child->{'Config::Entities::inherit'} );
+            if ($inherit) {
+                foreach my $key (@$inherit) {
+                    if ( defined( $parent->{$key} ) ) {
+                        $child->{$key} = $parent->{$key} unless ( defined( $child->{$key} ) );
+                    }
+                }
+            }
+        }
+        _inherit( $child, $child->{$_} ) foreach keys(%$child);
+    }
 }
 
 sub _merge {
@@ -145,7 +164,7 @@ Config::Entities - An multi-level overridable perl based configuration module
 
 =head1 VERSION
 
-version 0.02
+version 0.03
 
 =head1 SYNOPSIS
 
