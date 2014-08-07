@@ -25,4 +25,4 @@ requires:
 resources:
   homepage: https://github.com/lucastheisen/config-entities
   repository: https://github.com/lucastheisen/config-entities.git
-version: '0.01'
+version: '0.02'
